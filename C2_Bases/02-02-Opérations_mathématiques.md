@@ -11,6 +11,24 @@ Déclarez les nombres dans des variables locales et stockez le résultat dans un
 - Multiplication de deux nombres entiers.
 - Division de deux nombres réels.
 
+~~~cpp
+unsigned int resultatInt;
+float resultatSub;
+float resultatMult;
+float resultatDiv;
+// on peut se contenter d'un float pour les trois 
+// mais j'assume 3 variables différentes.
+
+int main(){
+    resultatInt = 2 + 3;
+    resultatSub = 2.5 - 3;
+    resultatMult = 2.5 * 3;
+    resultatDiv = 2.5/3;
+
+}
+
+~~~
+
 <details>
 <summary>Solution</summary>
 

@@ -1,10 +1,21 @@
 # Introduction au langage C
 
-1. Qu'est-ce une chaîne d'outil (ou *toolchain*) ?
-2. Quel est le rôle du compilateur C (détaillez)
-3. Quel est le premier argument reçu dans la fonction *main()* ?
+1. Qu'est-ce une chaîne d'outil (ou *toolchain*) ? 
 
-Que contient en général une *toolchain* ?
+$\rightarrow$ ensemble d'outils pour programmer, compiler, lier, déployer dans un language (ici C)
+2. Quel est le rôle du compilateur C (détaillez) 
+
+$\rightarrow$ traduire du language C (human readable) en language machine; C->assembly->machine
+3. Quel est le premier argument reçu dans la fonction *main()* ?  -> argc, le nb d'arguments passés (inclut le nom du programme)
+4. Que contient en général une *toolchain* ? 
+
+$\rightarrow$ Compilateur (pour traduire), 
+Linker (pour tout combiner en executable), 
+assembleur (convertir assembleur en cde machine),
+outil de gestion de dépendances (gerer bibliotheques, dépendances),
+outil d'optimisation (améliorer les performances),
+gestionnaire de build (exemple cmake),
+IDE (pour coder, vscode ie.).
 
 <details>
 <summary>Solution</summary>
