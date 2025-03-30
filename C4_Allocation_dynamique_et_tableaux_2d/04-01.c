@@ -1,44 +1,45 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int main(){
+int main() {
     int tmp = 0;
-    int count = 1;
-    int* tablo = malloc(sizeof(int));
+    int count = 0;
+    int* tablo = NULL; // Start with NULL
 
-    while(1){
-
+    while (1) {
         printf("Entrez un entier positif (une lettre pour finir): ");
-        //cond de sortie
-        if (scanf("%d", &tmp) != 1) {
-            break;
-        }
-        //scanf flush        
-        while (getchar() != '\n');
-        ++count;
 
-        //reallocation ++
-        int* temp = realloc(tablo,count * sizeof(int));
-        //verif qu'il reste de la mémoire
-        if(temp != NULL){
+        if (scanf("%d", &tmp) != 1) {
+            while (getchar() != '\n');
+            break; // Exit on non-integer input
+        }
+
+        while (getchar() != '\n'); // Clear input buffer
+
+        
+
+        // Reallocate memory
+        int* temp = realloc(tablo, count+1 * sizeof(int));
+        if (temp != NULL) {
             tablo = temp;
-        }else{
-            printf("memory allocation error");
+        } else {
+            printf("Erreur d'allocation mémoire\n");
             free(tablo);
             return 1;
         }
 
-        tablo[count - 1] = tmp; // Store the new value
-        
+        tablo[count] = tmp; // Store the value correctly
+        // Increase count before realloc
+        count++;
     }
-    //retour
-    printf("Vous avez entré:");
+
+    // Print the stored numbers correctly
+    printf("Vous avez entre: ");
     for (int i = 0; i < count; i++) {
         printf("%d ", tablo[i]);
     }
     printf("\n");
-    
-    free(tablo);
 
+    free(tablo);
     return 0;
 }
