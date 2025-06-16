@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define IN_FILE "E:\\git\\PRG2_Recueil_Exercices_ary\\C13_EXTRA\\spoon.bmp"
+#define IN_FILE "C13_EXTRA\\spoon.bmp"
 
 #pragma pack(push, 1)
 typedef struct {
