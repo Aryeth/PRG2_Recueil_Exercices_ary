@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <stdbool.h>
 
 #define IN_FILE "E:\\git\\PRG2_Recueil_Exercices_ary\\C13_EXTRA\\spoon.bmp"
 
@@ -261,95 +259,6 @@ char *LSB_decode(const Pixel *pixels, int width, int height) {
     return message;
 }
 
-//encoding on random pixels because, why not ?
-Pixel *LSB_encode_by_difference(Pixel *pixels, int width, int height, const char *message) {
-    int len = strlen(message) + 1;
-    int total_pixels = width * height;
-
-    if (len * 3 > total_pixels) {
-        fprintf(stderr, "Message too long\n");
-        return NULL;
-    }
-
-    bool *used = (bool *)calloc(total_pixels, sizeof(bool));
-    if (!used) return NULL;
-
-    srand((unsigned int)time(NULL));
-    int bits_encoded = 0;
-
-    for (int i = 0; i < len; i++) {
-        unsigned char ch = message[i];
-        for (int bit = 0; bit < 8; bit++) {
-            int channel = bit % 3;
-            int pixel_idx;
-
-            // Find unused pixel
-            do {
-                pixel_idx = rand() % total_pixels;
-            } while (used[pixel_idx]);
-            used[pixel_idx] = true;
-
-            // Modify selected channel's LSB
-            if (channel == 0)
-                pixels[pixel_idx].r = (pixels[pixel_idx].r & 0xFE) | ((ch >> bit) & 1);
-            else if (channel == 1)
-                pixels[pixel_idx].g = (pixels[pixel_idx].g & 0xFE) | ((ch >> bit) & 1);
-            else
-                pixels[pixel_idx].b = (pixels[pixel_idx].b & 0xFE) | ((ch >> bit) & 1);
-
-            bits_encoded++;
-        }
-    }
-
-    free(used);
-    return pixels;
-}
-
-//decoding my random thingy by comparing with original image
-char *LSB_decode_by_comparison(const Pixel *original, const Pixel *encoded, int width, int height) {
-    int total_pixels = width * height;
-    unsigned char current_byte = 0;
-    int bit_index = 0;
-    int msg_capacity = total_pixels / 3;
-    char *message = (char *)malloc(msg_capacity + 1);
-    if (!message) return NULL;
-    int msg_pos = 0;
-
-    for (int i = 0; i < total_pixels; i++) {
-        for (int c = 0; c < 3; c++) {
-            unsigned char orig, enc;
-            if (c == 0) {
-                orig = original[i].r;
-                enc = encoded[i].r;
-            } else if (c == 1) {
-                orig = original[i].g;
-                enc = encoded[i].g;
-            } else {
-                orig = original[i].b;
-                enc = encoded[i].b;
-            }
-
-            if ((orig & 1) != (enc & 1)) {
-                current_byte |= ((enc & 1) << bit_index);
-                bit_index++;
-
-                if (bit_index == 8) {
-                    message[msg_pos++] = current_byte;
-                    if (current_byte == '\0') {
-                        message[msg_pos] = '\0';
-                        return message;
-                    }
-                    current_byte = 0;
-                    bit_index = 0;
-                }
-            }
-        }
-    }
-
-    message[msg_pos] = '\0';
-    return message;
-}
-
 
 int main(int argc, char *argv[]) {
     //message to encode
@@ -394,24 +303,5 @@ int main(int argc, char *argv[]) {
     }
 
     free(decoded_pixels);
-    
-
-    Pixel *original = read_bmp(&w, &h, IN_FILE);
-    // Make a copy
-    Pixel *copy = (Pixel *)malloc(sizeof(Pixel) * w * h);
-    memcpy(copy, original, sizeof(Pixel) * w * h);
-
-    // Encode into copy
-    LSB_encode_by_difference(copy, w, h, message);
-    write_bmp("image_encoded.bmp", w, h, copy);
-
-    // Decode by comparing original and copy -> TODO fix maybe
-    Pixel *encoded = read_bmp(&w, &h, "image_encoded.bmp");
-    char *msg = LSB_decode_by_comparison(original, encoded, w, h);
-    printf("Decoded: %s\n", msg);
-
-    free(copy);
-    free(encoded);
-    free(msg);
     return 0;
 }
